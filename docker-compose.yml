@@ -1,0 +1,52 @@
+version: '2'
+
+services:
+        wordpress:
+                image: pattonwebz/wordpress-php7-1-apache-memcached
+                ports:
+                        - 80
+                environment:
+                        WORDPRESS_DB_USER: dbuser
+                        WORDPRESS_DB_PASSWORD: dbuser 
+                        WORDPRESS_DB_NAME: wordpress
+                        WORDPRESS_TABLE_PREFIX: wp_
+                        WORDPRESS_DB_HOST: mysql_suffix:3306
+                        VIRTUAL_HOST: technoserver.ddns.net
+#                        VIRTUAL_PROTO: https
+                        LETSENCRYPT_HOST: technoserver.ddns.net
+                        LETSENCRYPT_EMAIL: mitsoshxc@gmail.com
+                volumes:
+                        - data_volume:/var/www/html
+                        - ./home/wp:/home/wp
+                links: 
+                        - mysql:mysql_suffix
+        mysql:
+                image: mysql
+                environment:
+                        MYSQL_ROOT_PASSWORD: root
+                        MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+                        MYSQL_DATABASE: wordpress
+                        MYSQL_USER: dbuser
+                        MYSQL_PASSWORD: dbuser
+                volumes:
+                        - db_data:/var/lib/mysql
+                        - ./home/db:/home/db
+
+        wp:
+                image: pattonwebz/docker-wpcli
+                volumes_from: 
+                        - wordpress
+                links:
+                        - mysql:mysql_suffix
+                entrypoint: wp
+                command: "--info"
+
+volumes:
+        db_data:
+        data_volume:
+
+networks:
+        default:
+                external:
+                        name: nginx-proxy
+

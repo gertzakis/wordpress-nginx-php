@@ -1,0 +1,36 @@
+nginx:
+        image: nginx:latest
+        links:
+                - wordpress
+        ports:
+                - '80:80'
+        volumes:
+                - /home/mitsoshxc/Documents/wp-files:/var/www/html
+                - /home/mitsoshxc/Documents/wp-conf:/etc/nginx/conf.d
+        restart: always
+        privileged: true
+
+mysql-server:
+        image: mysql:latest
+        ports:
+                - '3306:3306'
+        volumes:
+                - /home/mitsoshxc/Documents/MySql:/var/lib/mysql
+        environment:
+                - MYSQL_ROOT_PASSWORD=root
+        restart: always
+        privileged: true
+
+wordpress:
+        image: wordpress:fpm
+        links:
+                - mysql-server:mysql
+        ports: 
+                - '9000:9000'
+        volumes:
+                - /home/mitsoshxc/Documents/wp-files:/var/www/html
+        environment:
+                - WORDPRESS_DB_PASSWORD=root
+        restart: always
+        privileged: true
+
