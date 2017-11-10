@@ -1,0 +1,10 @@
+docker stop wp-test
+
+docker rm wp-test
+
+docker run -d \
+	--name wp-test \
+	--link mysql-server \
+	-p 80:80 \
+	-v /var/www/wp-site1:/var/www/html \
+	test
