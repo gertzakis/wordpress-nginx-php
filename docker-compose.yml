@@ -2,50 +2,38 @@ version: '2'
 
 services:
         wordpress:
-                image: pattonwebz/wordpress-php7-1-apache-memcached
+                image: wordpress:4.8.3-php7.0-apache
+                container_name: wordpress
                 ports:
                         - 80
                 environment:
-                        WORDPRESS_DB_USER: dbuser
-                        WORDPRESS_DB_PASSWORD: dbuser 
+                        WORDPRESS_DB_HOST: mysql-server
+                        WORDPRESS_DB_USER: root
+                        WORDPRESS_DB_PASSWORD: root
                         WORDPRESS_DB_NAME: wordpress
-                        WORDPRESS_TABLE_PREFIX: wp_
-                        WORDPRESS_DB_HOST: mysql_suffix:3306
                         VIRTUAL_HOST: technoserver.ddns.net
-#                        VIRTUAL_PROTO: https
-                        LETSENCRYPT_HOST: technoserver.ddns.net
-                        LETSENCRYPT_EMAIL: mitsoshxc@gmail.com
                 volumes:
-                        - data_volume:/var/www/html
-                        - ./home/wp:/home/wp
-                links: 
-                        - mysql:mysql_suffix
-        mysql:
+                        - /home/admin/wp-techno :/var/www/html
+
+        mysql-server:
                 image: mysql
+                container_name: mysql-server
                 environment:
                         MYSQL_ROOT_PASSWORD: root
-                        MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-                        MYSQL_DATABASE: wordpress
-                        MYSQL_USER: dbuser
-                        MYSQL_PASSWORD: dbuser
                 volumes:
-                        - db_data:/var/lib/mysql
-                        - ./home/db:/home/db
+                        - /home/admin/db_data:/var/lib/mysql
 
-        wp:
-                image: pattonwebz/docker-wpcli
-                volumes_from: 
-                        - wordpress
-                links:
-                        - mysql:mysql_suffix
-                entrypoint: wp
-                command: "--info"
-
-volumes:
-        db_data:
-        data_volume:
-
+        php-myadmin:
+                image: phpmyadmin/phpmyadmin
+                container_name: phpmyadmin
+                ports:
+                        - "5081:80"
+                environment:
+                        PMA_HOST: mysql-server
+                        
 networks:
         default:
                 external:
                         name: nginx-proxy
+        back:
+                driver: bridge
