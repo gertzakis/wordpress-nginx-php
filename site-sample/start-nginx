@@ -1,0 +1,15 @@
+docker stop nginx-techno
+
+docker rm nginx-techno
+
+docker run -d \
+	--name nginx-techno \
+	--link wordpress-techno \
+	-v /home/admin/slothcode/technoserver/wp-files:/var/www/html \
+        -v /home/admin/slothcode/technoserver/conf.d:/etc/nginx/conf.d \
+	--privileged=true \
+	--expose=443 \
+	-e VIRTUAL_HOST=technoserver.ddns.net \
+	-e LETSENCRYPT_EMAIL=mitsoshxc@gmail.com \
+	-e LETSENCRYPT_HOST=technoserver.ddns.net \
+	nginx:latest

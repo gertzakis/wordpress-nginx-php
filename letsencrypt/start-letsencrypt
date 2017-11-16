@@ -1,7 +1,0 @@
-docker run -d \
-    --name letsencrypt \
-    --net nginx-proxy \
-    --volumes-from nginx-proxy \
-    -v /home/admin/certs:/etc/nginx/certs:rw \
-    -v /var/run/docker.sock:/var/run/docker.sock:ro \
-    jrcs/letsencrypt-nginx-proxy-companion

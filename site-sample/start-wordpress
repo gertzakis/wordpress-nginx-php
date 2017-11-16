@@ -1,0 +1,15 @@
+docker stop wordpress-techno
+
+docker rm wordpress-techno
+
+docker run -d \
+	--name wordpress-techno \
+	--link mysql-server:mysql \
+	-v /home/admin/slothcode/technoserver/wp-files:/var/www/html \
+	--privileged=true \
+	--expose=9000 \
+	-e WORDPRESS_DB_HOST=mysql-server \
+	-e WORDPRESS_DB_USER=techno \
+	-e WORDPRESS_DB_PASSWORD=root \
+	-e WORDPRESS_DB_NAME=techno \
+	wordpress:4.8.3-php7.1-fpm-alpine

@@ -1,0 +1,11 @@
+docker stop phpmyadmin
+
+docker rm phpmyadmin
+
+docker run -d \
+	--name phpmyadmin \
+	--link mysql-server:mysql \
+	-p 5081:80 \
+	--privileged=true \
+	-e PMA_HOST=mysql-server \
+	phpmyadmin/phpmyadmin

@@ -1,0 +1,10 @@
+docker stop mysql-server
+
+docker rm mysql-server
+
+docker run -d --name mysql-server \
+	-e MYSQL_ROOT_PASSWORD=root \
+	--expose=3306 \
+	-v /home/DB_data:/var/lib/mysql \
+	--privileged=true \
+	mysql:latest
